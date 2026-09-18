@@ -42,6 +42,8 @@
     before.style.width = `${value}%`;
     comparison.style.setProperty('--comparison-position', `${value}%`);
     handle.style.left = `${value}%`;
+    comparison.classList.toggle('is-before-focused', value <= 25);
+    comparison.classList.toggle('is-after-focused', value >= 75);
     comparison.setAttribute('aria-valuenow', String(Math.round(value)));
     comparison.setAttribute('aria-valuetext', `${Math.round(value)}% antes`);
   };
@@ -58,6 +60,10 @@
       setComparison(box.left + (Math.min(100, Math.max(0, next)) / 100) * box.width);
     }
   });
+  if (comparison) {
+    const box = comparison.getBoundingClientRect();
+    setComparison(box.left + box.width / 2);
+  }
 
   const track = document.querySelector('.services-track');
   const progress = document.querySelector('#services-progress');

@@ -7,6 +7,8 @@
 .icon{display:block;width:1.15em;height:1.15em;flex:0 0 auto}.button-arrow .icon{width:18px;height:18px}.slider-button .icon{width:17px;height:17px}.text-link .icon{width:17px;height:17px}.comparison-handle .icon{width:22px;height:22px}.site-header{transition:background .25s,box-shadow .25s,backdrop-filter .25s,padding .25s}.site-header.is-scrolled{position:fixed;background:rgba(255,255,255,.94);box-shadow:0 10px 28px rgba(0,57,126,.1);backdrop-filter:blur(14px);padding:14px 0}.approach-card:not(.featured){display:grid;grid-template-rows:170px 1fr;padding:0;overflow:hidden}.approach-card:not(.featured)>div:last-child{padding:20px 24px}.approach-card:not(.featured) .approach-image{overflow:hidden}.approach-card:not(.featured) .approach-image img{height:100%;object-fit:cover}@media(min-width:1920px){.container{width:75vw;max-width:none}}@media(max-width:680px){.approach-card:not(.featured){grid-template-rows:190px 1fr}.approach-card:not(.featured)>div:last-child{padding:20px 24px}.site-header.is-scrolled{padding:10px 0}}
 
 .panel-label{padding:7px 12px;border-radius:999px;background:rgba(27,25,24,.5);text-shadow:none;backdrop-filter:blur(6px)}
+.panel-label{transition:opacity .18s ease,visibility .18s ease}
+.comparison.is-before-focused .smile-before .panel-label,.comparison.is-after-focused .smile-after .panel-label{opacity:0;visibility:hidden}
 @media(max-width:680px){.comparison{aspect-ratio:1.2}}
 
 
