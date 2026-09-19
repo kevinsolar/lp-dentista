@@ -91,5 +91,142 @@
     status.textContent = 'Abrindo o WhatsApp com sua mensagem…';
     window.open(url, '_blank', 'noopener,noreferrer');
   });
+
+  const initGsapAnimations = () => {
+    if (!window.gsap || !window.ScrollTrigger) return;
+
+    const { gsap, ScrollTrigger } = window;
+    gsap.registerPlugin(ScrollTrigger);
+
+    const mm = gsap.matchMedia();
+    mm.add(
+      {
+        reduceMotion: '(prefers-reduced-motion: reduce)',
+        desktop: '(min-width: 901px)',
+      },
+      (context) => {
+        const { reduceMotion, desktop } = context.conditions;
+        const sectionSelectors = [
+          '.comparison-layout',
+          '.services .section-heading',
+          '.approach .section-heading',
+          '.team .section-heading',
+          '.booking-grid',
+          '.site-footer .footer-grid',
+        ];
+        const revealEach = (selector, vars, triggerStart = 'top 88%') => {
+          gsap.utils.toArray(selector).forEach((element) => {
+            gsap.from(element, {
+              ...vars,
+              scrollTrigger: {
+                trigger: element,
+                start: triggerStart,
+                once: true,
+              },
+            });
+          });
+        };
+
+        if (reduceMotion) {
+          gsap.set('.hero, .hero * , .comparison-layout, .service-card, .approach-card, .team-card, .booking-grid', {
+            clearProps: 'all',
+          });
+          return;
+        }
+
+        const heroTimeline = gsap.timeline({ defaults: { ease: 'power3.out' } });
+        heroTimeline
+          .from('.hero .eyebrow', { autoAlpha: 0, y: 18, duration: 0.55 })
+          .from('.hero h1', { autoAlpha: 0, y: 34, duration: 0.8 }, '-=0.28')
+          .from('.hero-lede, .hero-trust', { autoAlpha: 0, y: 20, duration: 0.65, stagger: 0.1 }, '-=0.42')
+          .from('.hero-copy .button', { autoAlpha: 0, y: 18, scale: 0.96, duration: 0.6 }, '-=0.35')
+          .from('.hero-visual', { autoAlpha: 0, x: 34, scale: 0.97, duration: 0.9 }, '-=0.8')
+          .from('.hero-rating, .hero-note', { autoAlpha: 0, y: 16, duration: 0.55, stagger: 0.12 }, '-=0.45');
+
+        gsap.to('.hero-photo img', {
+          scale: 1.045,
+          duration: 8,
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut',
+        });
+
+        gsap.to('.hero h1 em, .section-heading h2 em, .booking-copy h2 em', {
+          textShadow: '0 0 18px rgba(7, 151, 225, 0.3)',
+          duration: 2.4,
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut',
+        });
+
+        sectionSelectors.forEach((selector) => {
+          gsap.from(selector, {
+            autoAlpha: 0,
+            y: 42,
+            duration: 0.8,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: selector,
+              start: 'top 82%',
+              once: true,
+            },
+          });
+        });
+
+        revealEach('.service-card, .approach-card, .team-card', {
+          autoAlpha: 0,
+          y: 30,
+          duration: 0.65,
+          ease: 'power2.out',
+        });
+
+        gsap.from('.comparison-copy > *, .booking-copy > *, .booking-points li', {
+          autoAlpha: 0,
+          x: -24,
+          duration: 0.6,
+          stagger: 0.08,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: '.comparison-layout, .booking-grid',
+            start: 'top 82%',
+            once: true,
+          },
+        });
+
+        if (desktop) {
+          gsap.utils.toArray('.approach-image img, .team-card img, .service-card img').forEach((image) => {
+            gsap.to(image, {
+              yPercent: -5,
+              ease: 'none',
+              scrollTrigger: {
+                trigger: image,
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: 1,
+              },
+            });
+          });
+        }
+
+        gsap.utils.toArray('.button, .slider-button, .text-link').forEach((element) => {
+          if (element.dataset.gsapBound) return;
+          element.dataset.gsapBound = 'true';
+          const arrow = element.querySelector('.button-arrow, .icon-arrow');
+          element.addEventListener('mouseenter', () => {
+            gsap.to(element, { y: -3, duration: 0.22, ease: 'power2.out', overwrite: true });
+            if (arrow) gsap.to(arrow, { x: 3, rotation: 4, duration: 0.22, overwrite: true });
+          });
+          element.addEventListener('mouseleave', () => {
+            gsap.to(element, { y: 0, duration: 0.28, ease: 'power2.out', overwrite: true });
+            if (arrow) gsap.to(arrow, { x: 0, rotation: 0, duration: 0.28, overwrite: true });
+          });
+        });
+
+        ScrollTrigger.refresh();
+      },
+    );
+  };
+
+  initGsapAnimations();
 })();
 
